@@ -1,8 +1,14 @@
 [phases.build]
-cmds = ["cd backend && npm install"]
+cmds = ["npm install"]
 
 [phases.start]
-cmds = ["cd backend && npm start"]
+cmds = ["npm start"]
 
 [variables]
 NODE_ENV = "production"
+
+[build]
+workingDir = "backend"
+
+[detection]
+detected = "node"
