@@ -2,7 +2,7 @@
 cmds = ["npm install"]
 
 [phases.start]
-cmds = ["npm start"]
+cmd = "npm start"
 
 [variables]
 NODE_ENV = "production"
