@@ -16,6 +16,7 @@ const app = express();
 const PORT = 5000;
 
 // Razorpay Configuration
+console.log('Razorpay Key ID:', process.env.RAZORPAY_KEY_ID ? 'Set' : 'Not set');
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || 'rzp_test_YOUR_KEY_ID',
   key_secret: process.env.RAZORPAY_KEY_SECRET || 'YOUR_KEY_SECRET'
@@ -376,19 +377,33 @@ app.get('/api/v1/admin/orders/:id', verifyAdminToken);
 app.patch('/api/v1/admin/orders/:id/status', verifyAdminToken);
 
 // Razorpay Payment Endpoints
+app.get('/api/v1/payment/config', (req, res) => {
+  const keyId = process.env.RAZORPAY_KEY_ID;
+  res.json({
+    success: true,
+    key_id: keyId,
+    configured: !!keyId && !keyId.includes('YOUR_KEY_ID')
+  });
+});
+
 app.post('/api/v1/payment/create-order', async (req, res) => {
   try {
     const { amount } = req.body;
     if (!amount || amount <= 0) {
       return res.status(400).json({ success: false, message: 'Amount is required and must be greater than 0' });
     }
-    
+
+    const keyId = process.env.RAZORPAY_KEY_ID;
+    if (!keyId || keyId.includes('YOUR_KEY_ID')) {
+      return res.status(500).json({ success: false, message: 'Razorpay not configured. Please use COD.' });
+    }
+
     const options = {
       amount: amount * 100, // Razorpay expects amount in paise
       currency: 'INR',
       receipt: 'receipt_' + Date.now()
     };
-    
+
     const order = await razorpay.orders.create(options);
     res.json({ success: true, order_id: order.id, amount: order.amount, currency: order.currency });
   } catch (err) {

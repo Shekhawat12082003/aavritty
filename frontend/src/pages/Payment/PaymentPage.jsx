@@ -65,12 +65,21 @@ export default function PaymentPage() {
     }
 
     try {
+      // Get Razorpay key from backend
+      const configResponse = await api.get('/payment/config');
+      const razorpayKey = configResponse.key_id;
+
+      if (!razorpayKey || razorpayKey.includes('YOUR_KEY_ID')) {
+        setError('Payment gateway not configured. Please use COD for now.');
+        return;
+      }
+
       // Create Razorpay order
       const response = await api.post('/payment/create-order', { amount: total });
       const { order_id, amount, currency } = response;
 
       const options = {
-        key: 'rzp_test_YOUR_KEY_ID', // Replace with your Razorpay key from .env
+        key: razorpayKey,
         amount: amount,
         currency: currency,
         name: 'AAVRITTY Business Solutions',
