@@ -1,9 +1,8 @@
 {
   "build": {
-    "builder": "NIXPACKS",
-    "buildPath": "backend"
+    "builder": "NIXPACKS"
   },
   "deploy": {
-    "healthcheckPath": "/health"
+    "healthcheckPath": "/api/v1/health"
   }
 }
