@@ -44,7 +44,7 @@ export default function Header() {
               key={link.path}
               to={link.path}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
-                location.pathname === link.path
+                location.pathname === link.path || (link.path === '/orders' && location.pathname.startsWith('/orders'))
                   ? 'bg-primary-50 text-primary-700'
                   : 'text-slate-600 hover:bg-surface-100 hover:text-primary-700'
               }`}

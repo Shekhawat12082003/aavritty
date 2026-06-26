@@ -17,6 +17,9 @@ export default function ShopPage() {
     limit: 12,
   });
 
+  const products = data?.products || [];
+  const pagination = data?.pagination;
+
   return (
     <>
       <SEO title="Shop" description="Browse electrical products at wholesale prices" />
@@ -27,7 +30,7 @@ export default function ShopPage() {
             <h1 className="section-title">Shop</h1>
             <p className="mt-1 text-slate-500">
               {category ? `Showing: ${category}` : 'All electrical products'}
-              {data?.pagination && ` · ${data.pagination.total} products`}
+              {pagination && ` · ${pagination.total} products`}
             </p>
           </div>
           <div className="flex gap-3">
@@ -51,13 +54,13 @@ export default function ShopPage() {
           <PageLoader />
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {data?.products?.map((product, i) => (
+            {products.map((product, i) => (
               <ProductCard key={product.id} product={product} index={i} />
             ))}
           </div>
         )}
 
-        {!isLoading && data?.products?.length === 0 && (
+        {!isLoading && products.length === 0 && (
           <div className="mt-16 text-center">
             <p className="text-lg font-medium text-slate-600">No products found</p>
             <p className="mt-1 text-sm text-slate-400">Try adjusting your search or filters</p>

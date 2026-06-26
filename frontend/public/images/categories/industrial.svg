@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#064e3b"/>
+  <rect x="200" y="120" width="200" height="140" rx="4" fill="#6b7280"/>
+  <rect x="220" y="140" width="40" height="100" fill="#374151"/>
+  <rect x="280" y="140" width="40" height="100" fill="#374151"/>
+  <rect x="340" y="140" width="40" height="100" fill="#374151"/>
+  <polygon points="300,80 260,120 340,120" fill="#9ca3af"/>
+  <text x="300" y="320" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial">Industrial Equipment</text>
+</svg>

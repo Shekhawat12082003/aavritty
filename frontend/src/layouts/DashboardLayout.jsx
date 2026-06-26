@@ -1,4 +1,4 @@
-import { Outlet, Link, useLocation } from 'react-router-dom';
+import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   Package,
@@ -14,7 +14,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useAuthStore } from '@/store';
+import { useAuthStore, useAdminAuthStore } from '@/store';
 
 const sidebarLinks = {
   vendor: [
@@ -43,8 +43,29 @@ const sidebarLinks = {
 export default function DashboardLayout({ type = 'vendor' }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   const { logout, user } = useAuthStore();
+  const { logout: adminLogout, admin } = useAdminAuthStore();
   const links = sidebarLinks[type] || sidebarLinks.vendor;
+
+  console.log('DashboardLayout - type:', type);
+  console.log('DashboardLayout - admin:', admin);
+  console.log('DashboardLayout - user:', user);
+
+  const handleLogout = () => {
+    if (type === 'admin') {
+      adminLogout();
+      navigate('/admin/login');
+    } else {
+      logout();
+      navigate('/login');
+    }
+  };
+
+  const currentUser = type === 'admin' ? admin : user;
+  console.log('DashboardLayout - currentUser:', currentUser);
+
+  console.log('DashboardLayout - rendering layout');
 
   return (
     <div className="flex min-h-screen bg-surface-50">
@@ -80,7 +101,7 @@ export default function DashboardLayout({ type = 'vendor' }) {
         </nav>
         <div className="absolute bottom-0 w-full border-t border-slate-100 p-4">
           <button
-            onClick={logout}
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50"
           >
             <LogOut className="h-5 w-5" />
@@ -102,9 +123,9 @@ export default function DashboardLayout({ type = 'vendor' }) {
             </Link>
             <div className="hidden items-center gap-2 sm:flex">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-100 text-sm font-bold text-primary-700">
-                {user?.firstName?.[0] || 'U'}
+                {currentUser?.firstName?.[0] || 'U'}
               </div>
-              <span className="text-sm font-medium">{user?.firstName || 'User'}</span>
+              <span className="text-sm font-medium">{currentUser?.firstName || 'User'}</span>
             </div>
           </div>
         </header>

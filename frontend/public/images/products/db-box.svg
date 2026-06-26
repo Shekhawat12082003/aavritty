@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#374151"/>
+  <rect x="90" y="100" width="220" height="200" rx="6" fill="#1f2937" stroke="#6b7280" stroke-width="3"/>
+  <rect x="110" y="120" width="180" height="160" rx="4" fill="#111827"/>
+  <line x1="110" y1="160" x2="290" y2="160" stroke="#374151" stroke-width="2"/>
+  <line x1="110" y1="200" x2="290" y2="200" stroke="#374151" stroke-width="2"/>
+  <line x1="110" y1="240" x2="290" y2="240" stroke="#374151" stroke-width="2"/>
+  <text x="200" y="340" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="20" font-weight="bold">Distribution Board</text>
+  <text x="200" y="370" text-anchor="middle" fill="#9ca3af" font-family="Arial,sans-serif" font-size="16">Legrand 12M</text>
+</svg>

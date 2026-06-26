@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400">
+  <rect width="600" height="400" fill="#374151"/>
+  <rect x="180" y="90" width="240" height="200" rx="6" fill="#1f2937" stroke="#9ca3af" stroke-width="2"/>
+  <line x1="180" y1="140" x2="420" y2="140" stroke="#4b5563" stroke-width="2"/>
+  <line x1="180" y1="190" x2="420" y2="190" stroke="#4b5563" stroke-width="2"/>
+  <line x1="180" y1="240" x2="420" y2="240" stroke="#4b5563" stroke-width="2"/>
+  <text x="300" y="330" text-anchor="middle" fill="white" font-size="24" font-weight="bold" font-family="Arial">Distribution Boards</text>
+</svg>

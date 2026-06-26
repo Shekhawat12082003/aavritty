@@ -170,10 +170,52 @@ export const sampleProducts = [
 ];
 
 export const sampleCategories = [
-  { id: 'cat-1', name: 'Wires & Cables', slug: 'wires-cables', count: 245, icon: '🔌' },
-  { id: 'cat-2', name: 'Switches & Sockets', slug: 'switches-sockets', count: 189, icon: '⚡' },
-  { id: 'cat-3', name: 'Circuit Breakers', slug: 'circuit-breakers', count: 87, icon: '🔧' },
-  { id: 'cat-4', name: 'Distribution Boards', slug: 'distribution-boards', count: 56, icon: '📦' },
-  { id: 'cat-5', name: 'Fans & Lighting', slug: 'fans-lighting', count: 312, icon: '💡' },
-  { id: 'cat-6', name: 'Industrial Equipment', slug: 'industrial', count: 134, icon: '🏭' },
+  {
+    id: 'cat-1',
+    name: 'Wires & Cables',
+    slug: 'wires-cables',
+    count: 245,
+    iconKey: 'Cable',
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+  },
+  {
+    id: 'cat-2',
+    name: 'Switches & Sockets',
+    slug: 'switches-sockets',
+    count: 189,
+    iconKey: 'ToggleRight',
+    image: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop',
+  },
+  {
+    id: 'cat-3',
+    name: 'Circuit Breakers',
+    slug: 'circuit-breakers',
+    count: 87,
+    iconKey: 'ShieldCheck',
+    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&h=400&fit=crop',
+  },
+  {
+    id: 'cat-4',
+    name: 'Distribution Boards',
+    slug: 'distribution-boards',
+    count: 56,
+    iconKey: 'LayoutGrid',
+    image: 'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&h=400&fit=crop',
+  },
+  {
+    id: 'cat-5',
+    name: 'Fans & Lighting',
+    slug: 'fans-lighting',
+    count: 312,
+    iconKey: 'Lightbulb',
+    image: 'https://images.unsplash.com/photo-1565814636199-ae8133055c1c?w=600&h=400&fit=crop',
+  },
+  {
+    id: 'cat-6',
+    name: 'Industrial Equipment',
+    slug: 'industrial',
+    count: 134,
+    iconKey: 'Factory',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop',
+  },
 ];

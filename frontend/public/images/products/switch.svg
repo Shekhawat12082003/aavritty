@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e3a8a"/>
+      <stop offset="100%" style="stop-color:#172554"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg)"/>
+  <rect x="120" y="100" width="160" height="200" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="3"/>
+  <rect x="145" y="130" width="110" height="60" rx="6" fill="#e2e8f0"/>
+  <circle cx="200" cy="230" r="35" fill="#f97316"/>
+  <text x="200" y="330" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="22" font-weight="bold">Modular Switch</text>
+  <text x="200" y="360" text-anchor="middle" fill="#94a3b8" font-family="Arial,sans-serif" font-size="16">Havells</text>
+</svg>

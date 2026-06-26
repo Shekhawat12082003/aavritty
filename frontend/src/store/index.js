@@ -22,6 +22,34 @@ export const useAuthStore = create(
   ),
 );
 
+export const useAdminAuthStore = create(
+  persist(
+    (set) => ({
+      admin: null,
+      adminToken: null,
+      isAdminAuthenticated: false,
+      login: async (email, password) => {
+        const { adminAuthService } = await import('@/services');
+        console.log('Attempting admin login with:', email);
+        const response = await adminAuthService.login({ email, password });
+        console.log('Admin login response:', response);
+        localStorage.setItem('adminToken', response.accessToken);
+        set({
+          admin: response.user,
+          adminToken: response.accessToken,
+          isAdminAuthenticated: true,
+        });
+        console.log('Admin auth state set to true');
+      },
+      logout: () => {
+        localStorage.removeItem('adminToken');
+        set({ admin: null, adminToken: null, isAdminAuthenticated: false });
+      },
+    }),
+    { name: 'aavritty-admin-auth' },
+  ),
+);
+
 export const useCartStore = create(
   persist(
     (set, get) => ({
@@ -72,6 +100,8 @@ export const useWishlistStore = create(
     { name: 'aavritty-wishlist' },
   ),
 );
+
+export { useOrderStore } from './orders';
 
 export const formatPrice = (price) =>
   new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(price);

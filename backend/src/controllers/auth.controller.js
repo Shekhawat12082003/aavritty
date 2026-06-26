@@ -1,6 +1,7 @@
 import { ApiResponse } from '../utils/ApiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import * as authService from '../services/auth.service.js';
+import { comparePassword } from '../services/auth.service.js';
 
 /**
  * @swagger
@@ -26,6 +27,32 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const result = await authService.loginUser(req.body);
   res.status(200).json(new ApiResponse(200, result, 'Login successful'));
+});
+
+export const adminLogin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  const prisma = (await import('../config/database.js')).default;
+
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    return res.status(401).json(new ApiResponse(401, null, 'Invalid credentials'));
+  }
+
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    return res.status(403).json(new ApiResponse(403, null, 'Access denied. Admin only.'));
+  }
+
+  // Use bcrypt password comparison
+  const validPassword = await comparePassword(password, user.password);
+  if (!validPassword) {
+    return res.status(401).json(new ApiResponse(401, null, 'Invalid credentials'));
+  }
+
+  const result = await authService.loginUser(req.body);
+  res.status(200).json(new ApiResponse(200, result, 'Admin login successful'));
 });
 
 export const refresh = asyncHandler(async (req, res) => {

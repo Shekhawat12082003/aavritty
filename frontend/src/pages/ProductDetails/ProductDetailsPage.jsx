@@ -6,6 +6,7 @@ import Button from '@/components/common/Button';
 import { PageLoader } from '@/components/common/Loader';
 import { useProduct } from '@/hooks/useProducts';
 import { useCartStore, useWishlistStore, formatPrice } from '@/store';
+import { ProductImage } from '@/utils/productImages';
 
 export default function ProductDetailsPage() {
   const { slug } = useParams();
@@ -14,8 +15,8 @@ export default function ProductDetailsPage() {
   const addItem = useCartStore((s) => s.addItem);
   const { toggle, isInWishlist } = useWishlistStore();
 
-  if (isLoading) return <PageLoader />;
-  if (error || !product) {
+  if (isLoading && !product) return <PageLoader />;
+  if (!product) {
     return (
       <div className="container-app py-20 text-center">
         <h1 className="text-2xl font-bold">Product Not Found</h1>
@@ -40,12 +41,14 @@ export default function ProductDetailsPage() {
         </nav>
 
         <div className="grid gap-10 lg:grid-cols-2">
-          <div className="card overflow-hidden">
-            <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
+          <div className="card overflow-hidden bg-surface-50 p-6">
+            <ProductImage product={product} className="aspect-square w-full object-contain" />
           </div>
 
           <div>
-            <p className="text-sm font-medium uppercase tracking-wide text-slate-400">{product.brand}</p>
+            <p className="text-sm font-medium uppercase tracking-wide text-slate-400">
+              {typeof product.brand === 'object' ? product.brand?.name : product.brand}
+            </p>
             <h1 className="mt-2 font-display text-2xl font-bold text-primary-950 sm:text-3xl">{product.name}</h1>
 
             <div className="mt-3 flex items-center gap-2">

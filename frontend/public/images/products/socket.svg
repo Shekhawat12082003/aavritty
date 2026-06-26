@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <rect width="400" height="400" fill="#312e81"/>
+  <rect x="140" y="120" width="120" height="160" rx="8" fill="#f8fafc"/>
+  <rect x="165" y="180" width="30" height="40" rx="4" fill="#6366f1"/>
+  <rect x="205" y="180" width="30" height="40" rx="4" fill="#6366f1"/>
+  <text x="200" y="330" text-anchor="middle" fill="white" font-family="Arial,sans-serif" font-size="22" font-weight="bold">6A Socket</text>
+  <text x="200" y="360" text-anchor="middle" fill="#a5b4fc" font-family="Arial,sans-serif" font-size="16">Anchor Roma</text>
+</svg>

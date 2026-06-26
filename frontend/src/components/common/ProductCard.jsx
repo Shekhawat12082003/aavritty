@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ShoppingCart, Heart, Star } from 'lucide-react';
 import { useCartStore, useWishlistStore, formatPrice } from '@/store';
+import { ProductImage } from '@/utils/productImages';
 
 export default function ProductCard({ product, index = 0 }) {
   const addItem = useCartStore((s) => s.addItem);
@@ -17,9 +18,8 @@ export default function ProductCard({ product, index = 0 }) {
     >
       <div className="relative aspect-square overflow-hidden bg-surface-100">
         <Link to={`/product/${product.slug}`}>
-          <img
-            src={product.image}
-            alt={product.name}
+          <ProductImage
+            product={product}
             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         </Link>
@@ -37,7 +37,9 @@ export default function ProductCard({ product, index = 0 }) {
       </div>
 
       <div className="p-4">
-        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">{product.brand}</p>
+        <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+          {typeof product.brand === 'object' ? product.brand?.name : product.brand}
+        </p>
         <Link to={`/product/${product.slug}`}>
           <h3 className="mt-1 line-clamp-2 font-semibold text-slate-800 transition hover:text-primary-600">
             {product.name}

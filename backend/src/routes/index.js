@@ -13,6 +13,8 @@ import deliveryRoutes from './delivery.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import searchRoutes from './search.routes.js';
 import notificationRoutes from './notification.routes.js';
+import contactRoutes from './contact.routes.js';
+import supportRoutes from './support.routes.js';
 
 const router = Router();
 
@@ -30,5 +32,7 @@ router.use('/delivery', deliveryRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/search', searchRoutes);
 router.use('/notifications', notificationRoutes);
+router.use('/contact', contactRoutes);
+router.use('/support', supportRoutes);
 
 export default router;

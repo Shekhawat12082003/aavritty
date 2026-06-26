@@ -1,15 +1,47 @@
-import { Users, Package, ShoppingBag, DollarSign } from 'lucide-react';
+import { Users, Package, ShoppingBag, DollarSign, Building2 } from 'lucide-react';
 import SEO from '@/components/common/SEO';
 import { formatPrice } from '@/store';
+import { useQuery } from '@tanstack/react-query';
+import { dashboardService } from '@/services';
+import { PageLoader } from '@/components/common/Loader';
 
-const stats = [
-  { label: 'Total Users', value: '12,450', icon: Users },
-  { label: 'Products', value: '50,234', icon: Package },
-  { label: 'Orders Today', value: '342', icon: ShoppingBag },
-  { label: 'Revenue Today', value: formatPrice(890000), icon: DollarSign },
+const statsConfig = [
+  { label: 'Total Users', key: 'users', icon: Users },
+  { label: 'Products', key: 'products', icon: Package },
+  { label: 'Total Orders', key: 'orders', icon: ShoppingBag },
+  { label: 'Vendors', key: 'vendors', icon: Building2 },
 ];
 
 export default function AdminDashboardPage() {
+  const { data: dashboard, isLoading, error } = useQuery({
+    queryKey: ['admin-dashboard'],
+    queryFn: dashboardService.getAdminDashboard,
+  });
+
+  const { data: stats, error: statsError } = useQuery({
+    queryKey: ['admin-stats'],
+    queryFn: dashboardService.getAdminStats,
+  });
+
+  if (isLoading) return <PageLoader />;
+
+  if (error || statsError) {
+    return <div className="p-6 text-red-600">Error loading dashboard. Check console for details.</div>;
+  }
+
+  const statsWithRevenue = [
+    ...statsConfig.map((config) => ({
+      ...config,
+      value: dashboard?.[config.key]?.toLocaleString() || '0',
+    })),
+    {
+      label: 'Today\'s Revenue',
+      key: 'todayRevenue',
+      icon: DollarSign,
+      value: formatPrice(dashboard?.todayRevenue || 0),
+    },
+  ];
+
   return (
     <>
       <SEO title="Admin Dashboard" />
@@ -18,7 +50,7 @@ export default function AdminDashboardPage() {
         <p className="text-sm text-slate-500">Platform overview and management</p>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {stats.map((s) => (
+          {statsWithRevenue.map((s) => (
             <div key={s.label} className="card p-5">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-500">{s.label}</p>
@@ -34,31 +66,24 @@ export default function AdminDashboardPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <div className="card p-6">
             <h3 className="font-semibold">Pending Vendor Approvals</h3>
-            <div className="mt-4 space-y-3">
-              {['PowerTech Solutions', 'ElectroMart India', 'WireKing Traders'].map((v) => (
-                <div key={v} className="flex items-center justify-between rounded-xl bg-surface-50 p-3">
-                  <span className="text-sm font-medium">{v}</span>
-                  <div className="flex gap-2">
-                    <button className="rounded-lg bg-green-100 px-3 py-1 text-xs font-medium text-green-700">Approve</button>
-                    <button className="rounded-lg bg-red-100 px-3 py-1 text-xs font-medium text-red-700">Reject</button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <p className="mt-2 text-2xl font-bold text-amber-600">{stats?.pendingVendors || 0}</p>
+            <p className="text-sm text-slate-500">Vendors awaiting verification</p>
           </div>
           <div className="card p-6">
-            <h3 className="font-semibold">System Health</h3>
+            <h3 className="font-semibold">Recent Orders</h3>
             <div className="mt-4 space-y-3">
-              {[
-                ['API Server', 'Operational'],
-                ['Database', 'Connected'],
-                ['Payment Gateway', 'Pending Setup'],
-                ['Email Service', 'Configured'],
-              ].map(([service, status]) => (
-                <div key={service} className="flex items-center justify-between text-sm">
-                  <span>{service}</span>
-                  <span className={`badge ${status === 'Operational' || status === 'Connected' || status === 'Configured' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                    {status}
+              {stats?.recentOrders?.slice(0, 5).map((order) => (
+                <div key={order.id} className="flex items-center justify-between rounded-xl bg-surface-50 p-3">
+                  <div>
+                    <p className="text-sm font-medium">{order.orderNumber}</p>
+                    <p className="text-xs text-slate-500">{order.user?.firstName} {order.user?.lastName}</p>
+                  </div>
+                  <span className={`badge ${
+                    order.status === 'DELIVERED' ? 'bg-green-100 text-green-700' :
+                    order.status === 'PENDING' ? 'bg-amber-100 text-amber-700' :
+                    'bg-blue-100 text-blue-700'
+                  }`}>
+                    {order.status}
                   </span>
                 </div>
               ))}

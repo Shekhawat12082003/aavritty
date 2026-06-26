@@ -2,8 +2,42 @@ import { Truck, MapPin, Clock, DollarSign } from 'lucide-react';
 import SEO from '@/components/common/SEO';
 import Button from '@/components/common/Button';
 import { formatPrice } from '@/store';
+import { useQuery } from '@tanstack/react-query';
+import { dashboardService, orderService } from '@/services';
+import { PageLoader } from '@/components/common/Loader';
+
+const statsConfig = [
+  { label: 'Active Deliveries', key: 'activeOrders', icon: Truck },
+  { label: 'Completed Today', key: 'completedOrders', icon: Clock },
+  { label: 'Today\'s Earnings', key: 'totalEarnings', icon: DollarSign, format: true },
+  { label: 'Rating', value: '4.8 ★', icon: MapPin },
+];
 
 export default function DeliveryDashboardPage() {
+  const { data: dashboard, isLoading } = useQuery({
+    queryKey: ['delivery-dashboard'],
+    queryFn: dashboardService.getDeliveryDashboard,
+  });
+
+  const { data: ordersData } = useQuery({
+    queryKey: ['delivery-orders'],
+    queryFn: () => orderService.getAll({ status: 'CONFIRMED,PROCESSING,SHIPPED', limit: 10 }),
+  });
+
+  const activeOrders = ordersData?.data?.orders || [];
+
+  if (isLoading) return <PageLoader />;
+
+  const stats = statsConfig.map((config) => {
+    if (config.value) return config;
+    return {
+      ...config,
+      value: config.format 
+        ? formatPrice(dashboard?.[config.key] || 0)
+        : (dashboard?.[config.key]?.toLocaleString() || '0'),
+    };
+  });
+
   return (
     <>
       <SEO title="Delivery Dashboard" />
@@ -12,12 +46,7 @@ export default function DeliveryDashboardPage() {
         <p className="text-sm text-slate-500">Manage your deliveries and earnings</p>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: 'Active Deliveries', value: '4', icon: Truck },
-            { label: 'Completed Today', value: '12', icon: Clock },
-            { label: 'Today\'s Earnings', value: formatPrice(2400), icon: DollarSign },
-            { label: 'Rating', value: '4.8 ★', icon: MapPin },
-          ].map((s) => (
+          {stats.map((s) => (
             <div key={s.label} className="card p-5">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-slate-500">{s.label}</p>
@@ -34,22 +63,22 @@ export default function DeliveryDashboardPage() {
             <Button variant="secondary" className="!py-1.5 !text-xs">Go Online</Button>
           </div>
           <div className="mt-4 space-y-4">
-            {[
-              { id: 'DEL-301', address: 'Andheri East, Mumbai', amount: '₹4,580', distance: '3.2 km' },
-              { id: 'DEL-302', address: 'Bandra West, Mumbai', amount: '₹12,450', distance: '5.8 km' },
-            ].map((order) => (
+            {activeOrders.map((order) => (
               <div key={order.id} className="flex flex-col gap-3 rounded-xl border border-slate-100 p-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="font-medium">{order.id}</p>
-                  <p className="text-sm text-slate-500">{order.address}</p>
-                  <p className="text-xs text-slate-400">{order.distance} away</p>
+                  <p className="font-medium">{order.orderNumber || `ORD-${order.id.slice(0, 8)}`}</p>
+                  <p className="text-sm text-slate-500">{order.shippingAddress?.address || 'Address not available'}</p>
+                  <p className="text-xs text-slate-400">{order.items?.length || 0} items</p>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-primary-700">{order.amount}</span>
+                  <span className="font-bold text-primary-700">{formatPrice(order.totalAmount)}</span>
                   <Button className="!py-1.5 !text-xs">Accept</Button>
                 </div>
               </div>
             ))}
+            {activeOrders.length === 0 && (
+              <div className="py-8 text-center text-slate-500">No active orders available</div>
+            )}
           </div>
         </div>
       </div>

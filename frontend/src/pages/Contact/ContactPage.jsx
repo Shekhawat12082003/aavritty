@@ -4,13 +4,27 @@ import SEO from '@/components/common/SEO';
 import Input from '@/components/common/Input';
 import Button from '@/components/common/Button';
 import { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
+import { contactService } from '@/services';
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
   const { register, handleSubmit, formState: { errors } } = useForm();
 
-  const onSubmit = () => {
-    setSent(true);
+  const contactMutation = useMutation({
+    mutationFn: contactService.submit,
+    onSuccess: () => {
+      setSent(true);
+      setError('');
+    },
+    onError: (err) => {
+      setError(err.response?.data?.message || 'Failed to send message. Please try again.');
+    },
+  });
+
+  const onSubmit = (data) => {
+    contactMutation.mutate(data);
   };
 
   return (
@@ -45,22 +59,30 @@ export default function ContactPage() {
               <div className="py-8 text-center">
                 <p className="text-lg font-semibold text-green-600">Message Sent!</p>
                 <p className="mt-2 text-sm text-slate-500">We'll get back to you within 24 hours.</p>
+                <button onClick={() => setSent(false)} className="mt-4 text-sm text-primary-600 hover:underline">Send another message</button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-                <Input label="Name" error={errors.name?.message} {...register('name', { required: 'Name is required' })} />
-                <Input label="Email" type="email" error={errors.email?.message} {...register('email', { required: 'Email is required' })} />
-                <Input label="Phone" error={errors.phone?.message} {...register('phone')} />
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-slate-700">Message</label>
-                  <textarea
-                    className="input-field min-h-[120px] resize-none"
-                    {...register('message', { required: 'Message is required' })}
-                  />
-                  {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message.message}</p>}
-                </div>
-                <Button type="submit" className="w-full">Send Message</Button>
-              </form>
+              <>
+                {error && (
+                  <div className="mb-4 rounded-xl bg-red-50 p-3 text-sm text-red-600">
+                    {error}
+                  </div>
+                )}
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                  <Input label="Name" error={errors.name?.message} {...register('name', { required: 'Name is required' })} />
+                  <Input label="Email" type="email" error={errors.email?.message} {...register('email', { required: 'Email is required' })} />
+                  <Input label="Phone" error={errors.phone?.message} {...register('phone')} />
+                  <div>
+                    <label className="mb-1.5 block text-sm font-medium text-slate-700">Message</label>
+                    <textarea
+                      className="input-field min-h-[120px] resize-none"
+                      {...register('message', { required: 'Message is required' })}
+                    />
+                    {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message.message}</p>}
+                  </div>
+                  <Button type="submit" loading={contactMutation.isPending} className="w-full">Send Message</Button>
+                </form>
+              </>
             )}
           </div>
         </div>

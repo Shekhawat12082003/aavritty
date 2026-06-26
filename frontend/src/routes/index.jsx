@@ -1,7 +1,8 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
 import AuthLayout from '@/layouts/AuthLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
+import AdminProtectedRoute from '@/components/AdminProtectedRoute';
 
 import HomePage from '@/pages/Home/HomePage';
 import ShopPage from '@/pages/Shop/ShopPage';
@@ -16,10 +17,19 @@ import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 import CartPage from '@/pages/Cart/CartPage';
 import CheckoutPage from '@/pages/Checkout/CheckoutPage';
 import OrdersPage from '@/pages/Orders/OrdersPage';
+import OrderDetailPage from '@/pages/Orders/OrderDetailPage';
 import WishlistPage from '@/pages/Wishlist/WishlistPage';
 import ProfilePage from '@/pages/Profile/ProfilePage';
 import VendorDashboardPage from '@/pages/vendor/VendorDashboardPage';
+import VendorProductsPage from '@/pages/vendor/VendorProductsPage';
+import VendorOrdersPage from '@/pages/vendor/VendorOrdersPage';
+import VendorAnalyticsPage from '@/pages/vendor/VendorAnalyticsPage';
+import AdminLogin from '@/pages/admin/AdminLogin';
 import AdminDashboardPage from '@/pages/admin/AdminDashboardPage';
+import AdminUsersPage from '@/pages/admin/AdminUsersPage';
+import AdminProductsPage from '@/pages/admin/AdminProductsPage';
+import AdminOrdersPage from '@/pages/admin/AdminOrdersPage';
+import AdminAnalyticsPage from '@/pages/admin/AdminAnalyticsPage';
 import DeliveryDashboardPage from '@/pages/delivery/DeliveryDashboardPage';
 import SettingsPage from '@/pages/Settings/SettingsPage';
 import NotificationsPage from '@/pages/Notifications/NotificationsPage';
@@ -39,7 +49,6 @@ export default function AppRoutes() {
         <Route path="contact" element={<ContactPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
-        <Route path="orders" element={<OrdersPage />} />
         <Route path="wishlist" element={<WishlistPage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="notifications" element={<NotificationsPage />} />
@@ -53,19 +62,23 @@ export default function AppRoutes() {
         <Route path="forgot-password" element={<ForgotPasswordPage />} />
       </Route>
 
-      <Route path="vendor" element={<DashboardLayout type="vendor" />}>
-        <Route path="dashboard" element={<VendorDashboardPage />} />
-        <Route path="products" element={<VendorDashboardPage />} />
-        <Route path="orders" element={<VendorDashboardPage />} />
-        <Route path="analytics" element={<VendorDashboardPage />} />
+      <Route path="admin/login" element={<AdminLogin />} />
+
+      <Route path="admin" element={<AdminProtectedRoute />}>
+        <Route element={<DashboardLayout type="admin" />}>
+          <Route path="dashboard" element={<AdminDashboardPage />} />
+          <Route path="products" element={<AdminProductsPage />} />
+          <Route path="orders" element={<AdminOrdersPage />} />
+          <Route path="users" element={<AdminUsersPage />} />
+          <Route path="analytics" element={<AdminAnalyticsPage />} />
+        </Route>
       </Route>
 
-      <Route path="admin" element={<DashboardLayout type="admin" />}>
-        <Route path="dashboard" element={<AdminDashboardPage />} />
-        <Route path="products" element={<AdminDashboardPage />} />
-        <Route path="orders" element={<AdminDashboardPage />} />
-        <Route path="users" element={<AdminDashboardPage />} />
-        <Route path="analytics" element={<AdminDashboardPage />} />
+      <Route path="vendor" element={<DashboardLayout type="vendor" />}>
+        <Route path="dashboard" element={<VendorDashboardPage />} />
+        <Route path="products" element={<VendorProductsPage />} />
+        <Route path="orders" element={<VendorOrdersPage />} />
+        <Route path="analytics" element={<VendorAnalyticsPage />} />
       </Route>
 
       <Route path="delivery" element={<DashboardLayout type="delivery" />}>
