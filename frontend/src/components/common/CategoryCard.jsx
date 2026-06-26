@@ -4,18 +4,18 @@ import { ArrowRight } from 'lucide-react';
 import CategoryIcon from '@/components/common/CategoryIcon';
 
 const CATEGORY_IMAGES = {
-  'wires-cables': '/categories/wires-cables.jpg',
-  'switches-sockets': '/categories/switches-sockets.jpg',
-  'circuit-breakers': '/categories/circuit-breakers.jpg',
-  'distribution-boards': '/categories/distribution-boards.jpg',
-  'fans-lighting': '/categories/fans-lighting.jpg',
-  industrial: '/categories/industrial.jpg',
+  'wires-cables': '/images/categories/wires.jpg',
+  'switches-sockets': '/images/categories/switches.jpg',
+  'circuit-breakers': '/images/categories/breakers.jpg',
+  'distribution-boards': '/images/categories/panels.jpg',
+  'fans-lighting': '/images/categories/lighting.jpg',
+  industrial: '/images/categories/industrial.jpg',
 };
 
 export default function CategoryCard({ category, index = 0, variant = 'grid' }) {
   const cat = {
     ...category,
-    image: category.image || CATEGORY_IMAGES[category.slug] || '/categories/wires-cables.jpg',
+    image: category.image || CATEGORY_IMAGES[category.slug] || '/images/categories/wires.jpg',
   };
   const href = `/shop?category=${encodeURIComponent(cat.name)}`;
 

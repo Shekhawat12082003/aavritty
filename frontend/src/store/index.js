@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { adminAuthService } from '@/services';
 
 export const useAuthStore = create(
   persist(
@@ -29,7 +30,6 @@ export const useAdminAuthStore = create(
       adminToken: null,
       isAdminAuthenticated: false,
       login: async (email, password) => {
-        const { adminAuthService } = await import('@/services');
         console.log('Attempting admin login with:', email);
         const response = await adminAuthService.login({ email, password });
         console.log('Admin login response:', response);

@@ -19,6 +19,14 @@ export function useCategories() {
   return useQuery({
     queryKey: ['categories'],
     queryFn: () => productService.getCategories(),
+    fallbackData: [
+      { id: '1', name: 'Wires & Cables', slug: 'wires-cables', sortOrder: 1 },
+      { id: '2', name: 'Switches & Sockets', slug: 'switches-sockets', sortOrder: 2 },
+      { id: '3', name: 'Circuit Breakers', slug: 'circuit-breakers', sortOrder: 3 },
+      { id: '4', name: 'Distribution Boards', slug: 'distribution-boards', sortOrder: 4 },
+      { id: '5', name: 'Fans & Lighting', slug: 'fans-lighting', sortOrder: 5 },
+      { id: '6', name: 'Industrial Equipment', slug: 'industrial', sortOrder: 6 }
+    ]
   });
 }
 
