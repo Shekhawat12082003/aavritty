@@ -1,0 +1,149 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "Havells Wires 2.5mm",
+      "slug": "havells-wires-25mm",
+      "price": 1100,
+      "categoryId": "1",
+      "isActive": true,
+      "isFeatured": true,
+      "description": "High quality wires",
+      "stock": 50,
+      "image": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcReswhZnNxohw7j1yd14C0qjH4nbS72b4tRH1vi3w6aKKeIqUDc6WmFYFqgQJN_UgtyXqMJs4rWSmJ3GDvL0_ll6z7xqcZ9BwlIhWYDe5y4z1Wq485EZeEVvEKpjfDe&usqp=CAc"
+    },
+    {
+      "id": "2",
+      "name": "Polycab Switch 2A",
+      "slug": "polycab-switch-2a",
+      "price": 150,
+      "categoryId": "2",
+      "isActive": true,
+      "isFeatured": true,
+      "description": "Modular switch",
+      "stock": 100
+    },
+    {
+      "id": "3",
+      "name": "Schneider MCB 16A",
+      "slug": "schneider-mcb-16a",
+      "price": 450,
+      "categoryId": "3",
+      "isActive": true,
+      "isFeatured": true,
+      "description": "Circuit breaker",
+      "stock": 75
+    },
+    {
+      "id": "4",
+      "name": "Legrand DB Box",
+      "slug": "legrand-db-box",
+      "price": 850,
+      "categoryId": "4",
+      "isActive": true,
+      "isFeatured": false,
+      "description": "Distribution board",
+      "stock": 30
+    },
+    {
+      "id": "5",
+      "name": "Crompton Fan",
+      "slug": "crompton-fan",
+      "price": 2500,
+      "categoryId": "5",
+      "isActive": true,
+      "isFeatured": true,
+      "description": "Ceiling fan",
+      "stock": 25
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Wires & Cables",
+      "slug": "wires-cables",
+      "image": "/categories/wires-cables.jpg",
+      "sortOrder": 1
+    },
+    {
+      "id": "2",
+      "name": "Switches & Sockets",
+      "slug": "switches-sockets",
+      "image": "/categories/switches-sockets.jpg",
+      "sortOrder": 2
+    },
+    {
+      "id": "3",
+      "name": "Circuit Breakers",
+      "slug": "circuit-breakers",
+      "image": "/categories/circuit-breakers.jpg",
+      "sortOrder": 3
+    },
+    {
+      "id": "4",
+      "name": "Distribution Boards",
+      "slug": "distribution-boards",
+      "image": "/categories/distribution-boards.jpg",
+      "sortOrder": 4
+    },
+    {
+      "id": "5",
+      "name": "Fans & Lighting",
+      "slug": "fans-lighting",
+      "image": "/categories/fans-lighting.jpg",
+      "sortOrder": 5
+    },
+    {
+      "id": "6",
+      "name": "Industrial Equipment",
+      "slug": "industrial",
+      "image": "/categories/industrial.jpg",
+      "sortOrder": 6
+    }
+  ],
+  "orders": [
+    {
+      "id": "mquvqossd36g8uf0to",
+      "orderNumber": "ORD-000001",
+      "userId": null,
+      "status": "PENDING",
+      "subtotal": 1100,
+      "taxAmount": 198,
+      "totalAmount": 1298,
+      "paymentMethod": "COD",
+      "shippingAddress": {
+        "line1": "Mahroli Road, mean stand maharoli",
+        "line2": "",
+        "city": "Reengus",
+        "state": "Rajasthan",
+        "pincode": "332603",
+        "country": "India"
+      },
+      "billingAddress": {
+        "line1": "Mahroli Road, mean stand maharoli",
+        "line2": "",
+        "city": "Reengus",
+        "state": "Rajasthan",
+        "pincode": "332603",
+        "country": "India"
+      },
+      "notes": "",
+      "items": [
+        {
+          "productId": "1",
+          "quantity": 1,
+          "unitPrice": 1100,
+          "id": "mquvqosst0f1jd0g53",
+          "totalPrice": 1100
+        }
+      ],
+      "createdAt": "2026-06-26T12:00:49.420Z"
+    }
+  ],
+  "users": [],
+  "admin": {
+    "email": "admin@aavritty.com",
+    "password": "$2a$10$YourHashedPasswordHere",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGFhdnJpdHR5LmNvbSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc4MjQ3NzY4NCwiZXhwIjoxNzgzMDgyNDg0fQ.Q0AqgXeEztKX5mOiET2e-2rOpAyyFGsP-kSobmlfqBY"
+  }
+}

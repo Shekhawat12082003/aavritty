@@ -18,12 +18,14 @@ export default function AdminAnalyticsPage() {
 
   if (isLoading) return <PageLoader />;
 
+  const dashboardData = dashboard?.data || dashboard || {};
+  const statsData = stats?.data || stats || {};
+
   const metrics = [
-    { label: 'Total Users', value: dashboard?.users?.toLocaleString() || '0', icon: Users, color: 'text-blue-600' },
-    { label: 'Total Products', value: dashboard?.products?.toLocaleString() || '0', icon: Package, color: 'text-green-600' },
-    { label: 'Total Orders', value: dashboard?.orders?.toLocaleString() || '0', icon: ShoppingCart, color: 'text-purple-600' },
-    { label: 'Total Vendors', value: dashboard?.vendors?.toLocaleString() || '0', icon: Users, color: 'text-amber-600' },
-    { label: 'Today\'s Revenue', value: formatPrice(dashboard?.todayRevenue || 0), icon: DollarSign, color: 'text-emerald-600' },
+    { label: 'Total Users', value: dashboardData.users?.toLocaleString() || '0', icon: Users, color: 'text-blue-600' },
+    { label: 'Total Products', value: dashboardData.products?.toLocaleString() || '0', icon: Package, color: 'text-green-600' },
+    { label: 'Total Orders', value: dashboardData.orders?.toLocaleString() || '0', icon: ShoppingCart, color: 'text-purple-600' },
+    { label: 'Today\'s Revenue', value: formatPrice(dashboardData.todayRevenue || 0), icon: DollarSign, color: 'text-emerald-600' },
   ];
 
   return (
@@ -47,20 +49,16 @@ export default function AdminAnalyticsPage() {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-2">
           <div className="card p-6">
-            <h3 className="font-semibold">Pending Vendor Approvals</h3>
-            <p className="mt-4 text-4xl font-bold text-amber-600">{stats?.pendingVendors || 0}</p>
-            <p className="mt-2 text-sm text-slate-500">Vendors awaiting verification</p>
+            <h3 className="font-semibold">Recent Orders</h3>
+            <p className="mt-4 text-4xl font-bold text-amber-600">{statsData.recentOrders?.length || 0}</p>
+            <p className="mt-2 text-sm text-slate-500">Orders placed today</p>
           </div>
           <div className="card p-6">
             <h3 className="font-semibold">Recent Activity</h3>
             <div className="mt-4 space-y-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-slate-600">New orders today</span>
-                <span className="font-semibold">{stats?.recentOrders?.length || 0}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-slate-600">Low stock alerts</span>
-                <span className="font-semibold">{stats?.lowStockProducts?.length || 0}</span>
+                <span className="font-semibold">{statsData.recentOrders?.length || 0}</span>
               </div>
             </div>
           </div>

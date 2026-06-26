@@ -41,7 +41,7 @@ export default function AdminOrdersPage() {
     updateStatusMutation.mutate({ id, status });
   };
 
-  const orders = Array.isArray(ordersData?.orders) ? ordersData.orders : Array.isArray(ordersData) ? ordersData : [];
+  const orders = Array.isArray(ordersData?.data?.orders) ? ordersData.data.orders : Array.isArray(ordersData?.orders) ? ordersData.orders : Array.isArray(ordersData) ? ordersData : [];
 
   const filtered = useMemo(() => {
     if (!search) return orders;
@@ -125,7 +125,7 @@ export default function AdminOrdersPage() {
                 <tr className="border-b border-slate-100 bg-surface-50 text-left text-xs uppercase tracking-wide text-slate-400">
                   <th className="px-4 py-3">Order ID</th>
                   <th className="px-4 py-3">Customer</th>
-                  <th className="px-4 py-3">Vendor</th>
+                  <th className="px-4 py-3">Payment</th>
                   <th className="px-4 py-3">Items</th>
                   <th className="px-4 py-3">Amount</th>
                   <th className="px-4 py-3">Status</th>
@@ -138,10 +138,14 @@ export default function AdminOrdersPage() {
                   <tr key={order.id} className="border-b border-slate-50 hover:bg-surface-50/50">
                     <td className="px-4 py-3 font-medium text-primary-700">{order.orderNumber || `ORD-${order.id.slice(0, 8)}`}</td>
                     <td className="px-4 py-3">
-                      <p>{order.user?.firstName} {order.user?.lastName}</p>
-                      <p className="text-xs text-slate-400">{order.user?.email}</p>
+                      <p>{order.user?.firstName && order.user?.lastName ? `${order.user.firstName} ${order.user.lastName}` : 'Guest User'}</p>
+                      <p className="text-xs text-slate-400">{order.user?.email || 'N/A'}</p>
                     </td>
-                    <td className="px-4 py-3 text-slate-600">{order.items?.[0]?.product?.vendor?.businessName || 'N/A'}</td>
+                    <td className="px-4 py-3">
+                      <span className={`badge ${order.paymentMethod === 'COD' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'}`}>
+                        {order.paymentMethod || 'COD'}
+                      </span>
+                    </td>
                     <td className="px-4 py-3">{order.items?.length || 0}</td>
                     <td className="px-4 py-3 font-semibold">{formatPrice(order.totalAmount)}</td>
                     <td className="px-4 py-3">
@@ -163,19 +167,12 @@ export default function AdminOrdersPage() {
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex gap-1">
-                        <Link
-                          to={`/orders/${order.id}`}
-                          className="rounded-lg p-1.5 text-slate-400 hover:bg-primary-50 hover:text-primary-600"
-                          title="View"
-                        >
-                          <Eye className="h-4 w-4" />
-                        </Link>
                         <button
                           onClick={() => setSelected(order)}
-                          className="rounded-lg p-1.5 text-slate-400 hover:bg-surface-100"
-                          title="Quick view"
+                          className="rounded-lg p-1.5 text-slate-400 hover:bg-primary-50 hover:text-primary-600"
+                          title="View details"
                         >
-                          <Package className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </button>
                       </div>
                     </td>
@@ -190,24 +187,64 @@ export default function AdminOrdersPage() {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={() => setSelected(null)}>
             <div className="card max-h-[80vh] w-full max-w-lg overflow-y-auto p-6" onClick={(e) => e.stopPropagation()}>
               <h3 className="font-semibold">{selected.orderNumber}</h3>
-              <p className="text-sm text-slate-500">{selected.customer.name}</p>
+              <div className="mt-4 space-y-4 text-sm">
+                <div>
+                  <p className="font-medium text-slate-700">Customer Details</p>
+                  <p className="text-slate-600">
+                    {selected.user?.firstName && selected.user?.lastName 
+                      ? `${selected.user.firstName} ${selected.user.lastName}` 
+                      : 'Guest User'}
+                  </p>
+                  {selected.user?.email && <p className="text-slate-600">{selected.user.email}</p>}
+                  {selected.user?.phone && <p className="text-slate-600">{selected.user.phone}</p>}
+                </div>
+                <div>
+                  <p className="font-medium text-slate-700">Payment Method</p>
+                  <p className="text-slate-600">{selected.paymentMethod || 'N/A'}</p>
+                </div>
+                <div>
+                  <p className="font-medium text-slate-700">Shipping Address</p>
+                  <p className="text-slate-600">
+                    {selected.shippingAddress?.line1}
+                    {selected.shippingAddress?.line2 && `, ${selected.shippingAddress.line2}`}
+                  </p>
+                  <p className="text-slate-600">
+                    {selected.shippingAddress?.city}, {selected.shippingAddress?.state} - {selected.shippingAddress?.pincode}
+                  </p>
+                  <p className="text-slate-600">{selected.shippingAddress?.country}</p>
+                </div>
+                {selected.notes && (
+                  <div>
+                    <p className="font-medium text-slate-700">Notes</p>
+                    <p className="text-slate-600">{selected.notes}</p>
+                  </div>
+                )}
+              </div>
               <div className="mt-4 space-y-2">
-                {selected.items.map((item) => (
-                  <div key={item.id} className="flex justify-between text-sm">
-                    <span>{item.name} × {item.quantity}</span>
+                <p className="font-medium text-slate-700">Items</p>
+                {selected.items?.map((item, index) => (
+                  <div key={item.id || index} className="flex justify-between text-sm">
+                    <span>Item #{index + 1} × {item.quantity}</span>
                     <span>{formatPrice(item.unitPrice * item.quantity)}</span>
                   </div>
                 ))}
               </div>
-              <div className="mt-4 flex justify-between border-t pt-4 font-bold">
-                <span>Total</span>
-                <span>{formatPrice(selected.totalAmount)}</span>
+              <div className="mt-4 space-y-1 text-sm">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(selected.subtotal)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tax (18%)</span>
+                  <span>{formatPrice(selected.taxAmount)}</span>
+                </div>
+                <div className="flex justify-between border-t pt-1 font-bold">
+                  <span>Total</span>
+                  <span>{formatPrice(selected.totalAmount)}</span>
+                </div>
               </div>
               <div className="mt-4 flex gap-2">
-                <Link to={`/orders/${selected.id}`} className="btn-primary flex-1 text-center !py-2 !text-xs">
-                  Full Details
-                </Link>
-                <button onClick={() => setSelected(null)} className="btn-secondary !py-2 !text-xs">Close</button>
+                <button onClick={() => setSelected(null)} className="btn-secondary flex-1 !py-2 !text-xs">Close</button>
               </div>
             </div>
           </div>

@@ -10,6 +10,17 @@ export default function AdminProductsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    slug: '',
+    price: '',
+    categoryId: '',
+    isActive: true,
+    isFeatured: false,
+    description: '',
+    stock: '',
+    image: ''
+  });
   const queryClient = useQueryClient();
 
   const { data: productsData, isLoading } = useQuery({
@@ -17,7 +28,7 @@ export default function AdminProductsPage() {
     queryFn: () => dashboardService.getAdminProducts({ search: searchTerm, limit: 50 }),
   });
 
-  const products = productsData?.products || [];
+  const products = productsData?.data?.products || productsData?.products || [];
 
   const deleteMutation = useMutation({
     mutationFn: (id) => adminApi.delete(`/products/${id}`),
@@ -33,6 +44,46 @@ export default function AdminProductsPage() {
     },
   });
 
+  const addProductMutation = useMutation({
+    mutationFn: (data) => adminApi.post('/admin/products', data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['admin-products']);
+      setShowModal(false);
+      setEditingProduct(null);
+      setFormData({
+        name: '',
+        slug: '',
+        price: '',
+        categoryId: '',
+        isActive: true,
+        isFeatured: false,
+        description: '',
+        stock: '',
+        image: ''
+      });
+    },
+  });
+
+  const updateProductMutation = useMutation({
+    mutationFn: ({ id, data }) => adminApi.put(`/admin/products/${id}`, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['admin-products']);
+      setShowModal(false);
+      setEditingProduct(null);
+      setFormData({
+        name: '',
+        slug: '',
+        price: '',
+        categoryId: '',
+        isActive: true,
+        isFeatured: false,
+        description: '',
+        stock: '',
+        image: ''
+      });
+    },
+  });
+
   const handleDelete = (productId) => {
     if (confirm('Are you sure you want to delete this product?')) {
       deleteMutation.mutate(productId);
@@ -45,17 +96,73 @@ export default function AdminProductsPage() {
 
   const handleEdit = (product) => {
     setEditingProduct(product);
+    setFormData({
+      name: product.name,
+      slug: product.slug,
+      price: product.price,
+      categoryId: product.categoryId,
+      isActive: product.isActive,
+      isFeatured: product.isFeatured,
+      description: product.description,
+      stock: product.stock,
+      image: product.image || ''
+    });
     setShowModal(true);
   };
 
   const handleAdd = () => {
     setEditingProduct(null);
+    setFormData({
+      name: '',
+      slug: '',
+      price: '',
+      categoryId: '',
+      isActive: true,
+      isFeatured: false,
+      description: '',
+      stock: '',
+      image: ''
+    });
     setShowModal(true);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setEditingProduct(null);
+    setFormData({
+      name: '',
+      slug: '',
+      price: '',
+      categoryId: '',
+      isActive: true,
+      isFeatured: false,
+      description: '',
+      stock: ''
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const productData = {
+      ...formData,
+      price: parseFloat(formData.price),
+      stock: parseInt(formData.stock),
+      slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    };
+
+    if (editingProduct) {
+      updateProductMutation.mutate({ id: editingProduct.id, data: productData });
+    } else {
+      addProductMutation.mutate(productData);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   if (isLoading) return <PageLoader />;
@@ -170,10 +277,148 @@ export default function AdminProductsPage() {
                   <X className="h-5 w-5" />
                 </button>
               </div>
-              <div className="p-4 text-center text-slate-500">
-                <p>Product form coming soon. This will allow adding/editing products with all fields.</p>
-                <p className="text-sm mt-2">For now, use the backend API directly or seed data.</p>
-              </div>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Product Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="Enter product name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Slug</label>
+                  <input
+                    type="text"
+                    name="slug"
+                    value={formData.slug}
+                    onChange={handleInputChange}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="product-slug (auto-generated if empty)"
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Price (₹)</label>
+                    <input
+                      type="number"
+                      name="price"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      required
+                      min="0"
+                      step="0.01"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="0.00"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Stock</label>
+                    <input
+                      type="number"
+                      name="stock"
+                      value={formData.stock}
+                      onChange={handleInputChange}
+                      required
+                      min="0"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="0"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>
+                  <select
+                    name="categoryId"
+                    value={formData.categoryId}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                  >
+                    <option value="">Select category</option>
+                    <option value="1">Wires & Cables</option>
+                    <option value="2">Switches & Sockets</option>
+                    <option value="3">Circuit Breakers</option>
+                    <option value="4">Distribution Boards</option>
+                    <option value="5">Fans & Lighting</option>
+                    <option value="6">Industrial Equipment</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Description</label>
+                  <textarea
+                    name="description"
+                    value={formData.description}
+                    onChange={handleInputChange}
+                    rows="3"
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="Product description"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Image URL</label>
+                  <input
+                    type="url"
+                    name="image"
+                    value={formData.image}
+                    onChange={handleInputChange}
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                  {formData.image && (
+                    <div className="mt-2">
+                      <img 
+                        src={formData.image} 
+                        alt="Preview" 
+                        className="h-20 w-20 object-cover rounded-lg border border-slate-200"
+                        onError={(e) => e.target.style.display = 'none'}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="isActive"
+                      checked={formData.isActive}
+                      onChange={handleInputChange}
+                      className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-slate-700">Active</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      name="isFeatured"
+                      checked={formData.isFeatured}
+                      onChange={handleInputChange}
+                      className="rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-slate-700">Featured</span>
+                  </label>
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="submit"
+                    disabled={addProductMutation.isLoading || updateProductMutation.isLoading}
+                    className="btn-primary flex-1"
+                  >
+                    {addProductMutation.isLoading || updateProductMutation.isLoading ? 'Saving...' : (editingProduct ? 'Update Product' : 'Add Product')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCloseModal}
+                    className="btn-secondary"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         )}

@@ -25,7 +25,7 @@ export default function AdminUsersPage() {
     }),
   });
 
-  const users = usersData?.users || [];
+  const users = usersData?.data?.users || usersData?.users || [];
 
   const deleteMutation = useMutation({
     mutationFn: (id) => adminApi.delete(`/users/${id}`),

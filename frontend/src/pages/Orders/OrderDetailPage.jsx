@@ -184,9 +184,9 @@ export default function OrderDetailPage() {
             <div className="card p-6">
               <h2 className="font-semibold text-slate-800">Customer</h2>
               <div className="mt-3 space-y-2 text-sm text-slate-600">
-                <p className="font-medium">{order.user?.firstName} {order.user?.lastName}</p>
-                <p className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> {order.user?.email}</p>
-                <p className="flex items-center gap-2"><Phone className="h-3.5 w-3.5" /> {order.user?.phone || 'N/A'}</p>
+                <p className="font-medium">{order.user?.firstName && order.user?.lastName ? `${order.user.firstName} ${order.user.lastName}` : 'Guest User'}</p>
+                {order.user?.email && <p className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" /> {order.user.email}</p>}
+                {order.user?.phone && <p className="flex items-center gap-2"><Phone className="h-3.5 w-3.5" /> {order.user.phone}</p>}
               </div>
             </div>
 

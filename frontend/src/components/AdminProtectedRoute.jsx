@@ -1,15 +1,15 @@
-import { Navigate } from 'react-router-dom';
-import { useAdminAuthStore } from '@/store';
+import { Navigate, Outlet } from 'react-router-dom';
 
-export default function AdminProtectedRoute({ children }) {
-  const { isAdminAuthenticated } = useAdminAuthStore();
-  console.log('AdminProtectedRoute - isAdminAuthenticated:', isAdminAuthenticated);
+export default function AdminProtectedRoute() {
+  const adminToken = localStorage.getItem('adminToken');
 
-  if (!isAdminAuthenticated) {
-    console.log('Redirecting to admin/login');
+  console.log('AdminProtectedRoute - adminToken:', adminToken ? 'exists' : 'missing');
+
+  if (!adminToken) {
+    console.log('Redirecting to /admin/login');
     return <Navigate to="/admin/login" replace />;
   }
 
-  console.log('Rendering admin protected content');
-  return children;
+  console.log('Rendering Outlet');
+  return <Outlet />;
 }

@@ -24,7 +24,7 @@ export const useAuthStore = create(
 
 export const useAdminAuthStore = create(
   persist(
-    (set) => ({
+    (set, get) => ({
       admin: null,
       adminToken: null,
       isAdminAuthenticated: false,
@@ -33,10 +33,10 @@ export const useAdminAuthStore = create(
         console.log('Attempting admin login with:', email);
         const response = await adminAuthService.login({ email, password });
         console.log('Admin login response:', response);
-        localStorage.setItem('adminToken', response.accessToken);
+        localStorage.setItem('adminToken', response.token);
         set({
-          admin: response.user,
-          adminToken: response.accessToken,
+          admin: response.admin,
+          adminToken: response.token,
           isAdminAuthenticated: true,
         });
         console.log('Admin auth state set to true');
@@ -44,6 +44,12 @@ export const useAdminAuthStore = create(
       logout: () => {
         localStorage.removeItem('adminToken');
         set({ admin: null, adminToken: null, isAdminAuthenticated: false });
+      },
+      initializeFromStorage: () => {
+        const token = localStorage.getItem('adminToken');
+        if (token) {
+          set({ adminToken: token, isAdminAuthenticated: true });
+        }
       },
     }),
     { name: 'aavritty-admin-auth' },

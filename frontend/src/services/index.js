@@ -2,6 +2,8 @@ import api from './api';
 import axios from 'axios';
 import { API_BASE_URL } from '@/constants';
 
+export { api };
+
 export const adminApi = axios.create({
   baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
@@ -17,8 +19,12 @@ adminApi.interceptors.request.use((config) => {
 });
 
 adminApi.interceptors.response.use(
-  (response) => response.data?.data || response.data,
+  (response) => {
+    console.log('Admin API Response:', response.data);
+    return response.data;
+  },
   async (error) => {
+    console.log('Admin API Error:', error);
     if (error.response?.status === 401) {
       localStorage.removeItem('adminToken');
       window.location.href = '/admin/login';
@@ -46,7 +52,7 @@ export const authService = {
 };
 
 export const adminAuthService = {
-  login: (data) => adminApi.post('/auth/admin/login', data),
+  login: (data) => adminApi.post('/admin/login', data),
   logout: () => adminApi.post('/auth/logout'),
   getProfile: () => adminApi.get('/auth/me'),
 };

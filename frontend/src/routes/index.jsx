@@ -20,10 +20,6 @@ import OrdersPage from '@/pages/Orders/OrdersPage';
 import OrderDetailPage from '@/pages/Orders/OrderDetailPage';
 import WishlistPage from '@/pages/Wishlist/WishlistPage';
 import ProfilePage from '@/pages/Profile/ProfilePage';
-import VendorDashboardPage from '@/pages/vendor/VendorDashboardPage';
-import VendorProductsPage from '@/pages/vendor/VendorProductsPage';
-import VendorOrdersPage from '@/pages/vendor/VendorOrdersPage';
-import VendorAnalyticsPage from '@/pages/vendor/VendorAnalyticsPage';
 import AdminLogin from '@/pages/admin/AdminLogin';
 import AdminDashboardPage from '@/pages/admin/AdminDashboardPage';
 import AdminUsersPage from '@/pages/admin/AdminUsersPage';
@@ -34,6 +30,7 @@ import DeliveryDashboardPage from '@/pages/delivery/DeliveryDashboardPage';
 import SettingsPage from '@/pages/Settings/SettingsPage';
 import NotificationsPage from '@/pages/Notifications/NotificationsPage';
 import SupportPage from '@/pages/Support/SupportPage';
+import PaymentPage from '@/pages/Payment/PaymentPage';
 import NotFoundPage from '@/pages/NotFound/NotFoundPage';
 
 export default function AppRoutes() {
@@ -49,6 +46,7 @@ export default function AppRoutes() {
         <Route path="contact" element={<ContactPage />} />
         <Route path="cart" element={<CartPage />} />
         <Route path="checkout" element={<CheckoutPage />} />
+        <Route path="payment" element={<PaymentPage />} />
         <Route path="wishlist" element={<WishlistPage />} />
         <Route path="profile" element={<ProfilePage />} />
         <Route path="notifications" element={<NotificationsPage />} />
@@ -64,21 +62,16 @@ export default function AppRoutes() {
 
       <Route path="admin/login" element={<AdminLogin />} />
 
-      <Route path="admin" element={<AdminProtectedRoute />}>
-        <Route element={<DashboardLayout type="admin" />}>
+      <Route path="admin" element={<DashboardLayout type="admin" />}>
+        <Route element={<AdminProtectedRoute />}>
+          <Route index element={<AdminDashboardPage />} />
           <Route path="dashboard" element={<AdminDashboardPage />} />
           <Route path="products" element={<AdminProductsPage />} />
           <Route path="orders" element={<AdminOrdersPage />} />
           <Route path="users" element={<AdminUsersPage />} />
           <Route path="analytics" element={<AdminAnalyticsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
-      </Route>
-
-      <Route path="vendor" element={<DashboardLayout type="vendor" />}>
-        <Route path="dashboard" element={<VendorDashboardPage />} />
-        <Route path="products" element={<VendorProductsPage />} />
-        <Route path="orders" element={<VendorOrdersPage />} />
-        <Route path="analytics" element={<VendorAnalyticsPage />} />
       </Route>
 
       <Route path="delivery" element={<DashboardLayout type="delivery" />}>
@@ -87,9 +80,6 @@ export default function AppRoutes() {
         <Route path="earnings" element={<DeliveryDashboardPage />} />
       </Route>
 
-      <Route path="settings" element={<DashboardLayout type="vendor" />}>
-        <Route index element={<SettingsPage />} />
-      </Route>
     </Routes>
   );
 }

@@ -17,20 +17,13 @@ import { useState } from 'react';
 import { useAuthStore, useAdminAuthStore } from '@/store';
 
 const sidebarLinks = {
-  vendor: [
-    { label: 'Dashboard', path: '/vendor/dashboard', icon: LayoutDashboard },
-    { label: 'Products', path: '/vendor/products', icon: Package },
-    { label: 'Orders', path: '/vendor/orders', icon: ShoppingBag },
-    { label: 'Analytics', path: '/vendor/analytics', icon: BarChart3 },
-    { label: 'Settings', path: '/settings', icon: Settings },
-  ],
   admin: [
     { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
     { label: 'Products', path: '/admin/products', icon: Package },
     { label: 'Orders', path: '/admin/orders', icon: ShoppingBag },
     { label: 'Users', path: '/admin/users', icon: Users },
     { label: 'Analytics', path: '/admin/analytics', icon: BarChart3 },
-    { label: 'Settings', path: '/settings', icon: Settings },
+    { label: 'Settings', path: '/admin/settings', icon: Settings },
   ],
   delivery: [
     { label: 'Dashboard', path: '/delivery/dashboard', icon: LayoutDashboard },
@@ -48,7 +41,7 @@ export default function DashboardLayout({ type = 'vendor' }) {
   const { logout: adminLogout, admin } = useAdminAuthStore();
   const links = sidebarLinks[type] || sidebarLinks.vendor;
 
-  console.log('DashboardLayout - type:', type);
+  console.log('DashboardLayout rendering - type:', type);
   console.log('DashboardLayout - admin:', admin);
   console.log('DashboardLayout - user:', user);
 
@@ -65,7 +58,7 @@ export default function DashboardLayout({ type = 'vendor' }) {
   const currentUser = type === 'admin' ? admin : user;
   console.log('DashboardLayout - currentUser:', currentUser);
 
-  console.log('DashboardLayout - rendering layout');
+  console.log('DashboardLayout - rendering layout with Outlet');
 
   return (
     <div className="flex min-h-screen bg-surface-50">

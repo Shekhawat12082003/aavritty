@@ -101,3 +101,4 @@ See `backend/.env.example` and `frontend/.env.example`.
 ## License
 
 Proprietary — AAVRITTY Business Solutions
+admin@aavritty.com
