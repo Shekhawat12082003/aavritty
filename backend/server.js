@@ -23,7 +23,10 @@ const razorpay = new Razorpay({
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['https://aavrittybusiness.com', 'http://localhost:5173'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Data storage file path
