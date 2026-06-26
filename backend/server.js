@@ -424,6 +424,7 @@ app.post('/api/v1/payment/verify', (req, res) => {
     const expectedSignature = crypto
       .createHmac('sha256', razorpay.key_secret)
       .update(body)
+      
       .digest('hex');
     
     if (expectedSignature === razorpay_signature) {
@@ -436,6 +437,7 @@ app.post('/api/v1/payment/verify', (req, res) => {
     res.status(500).json({ success: false, message: 'Verification failed', details: err.message });
   }
 });
+
 
 // Start server
 app.listen(PORT, '0.0.0.0', () => {
