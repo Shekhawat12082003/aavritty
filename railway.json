@@ -1,9 +1,9 @@
 {
   "build": {
-    "builder": "NIXPACKS"
+    "builder": "NIXPACKS",
+    "buildPath": "backend"
   },
   "deploy": {
-    "startCommand": "cd backend && npm start",
     "healthcheckPath": "/health"
   }
 }
