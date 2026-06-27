@@ -4,14 +4,12 @@ import {
   Search,
   ShoppingCart,
   Heart,
-  User,
   Menu,
   X,
   Zap,
-  ChevronDown,
 } from 'lucide-react';
 import { NAV_LINKS, APP_NAME } from '@/constants';
-import { useCartStore, useWishlistStore, useAuthStore } from '@/store';
+import { useCartStore, useWishlistStore } from '@/store';
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -19,7 +17,6 @@ export default function Header() {
   const location = useLocation();
   const cartCount = useCartStore((s) => s.getCount());
   const wishlistCount = useWishlistStore((s) => s.items.length);
-  const { isAuthenticated, user, logout } = useAuthStore();
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-100 bg-white/95 backdrop-blur-md">
@@ -80,28 +77,6 @@ export default function Header() {
             )}
           </Link>
 
-          {isAuthenticated ? (
-            <div className="group relative hidden sm:block">
-              <button className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700">
-                <User className="h-4 w-4" />
-                {user?.firstName || 'Account'}
-                <ChevronDown className="h-4 w-4" />
-              </button>
-              <div className="invisible absolute right-0 top-full z-50 mt-2 w-48 rounded-xl border border-slate-100 bg-white py-2 opacity-0 shadow-card-hover transition group-hover:visible group-hover:opacity-100">
-                <Link to="/profile" className="block px-4 py-2 text-sm hover:bg-surface-50">Profile</Link>
-                <Link to="/orders" className="block px-4 py-2 text-sm hover:bg-surface-50">Orders</Link>
-                <Link to="/settings" className="block px-4 py-2 text-sm hover:bg-surface-50">Settings</Link>
-                <button onClick={logout} className="block w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">
-                  Logout
-                </button>
-              </div>
-            </div>
-          ) : (
-            <Link to="/login" className="btn-primary hidden sm:inline-flex !py-2 !text-xs">
-              Login
-            </Link>
-          )}
-
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="rounded-xl p-2.5 text-slate-600 lg:hidden"
@@ -137,11 +112,6 @@ export default function Header() {
                 {link.label}
               </Link>
             ))}
-            {!isAuthenticated && (
-              <Link to="/login" onClick={() => setMobileOpen(false)} className="btn-primary mt-2">
-                Login / Register
-              </Link>
-            )}
           </nav>
         </div>
       )}

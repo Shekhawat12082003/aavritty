@@ -26,7 +26,7 @@ export default function AboutPage() {
               We connect contractors, retailers, and industries with verified vendors offering genuine products at competitive prices.
             </p>
             <p className="mt-4 leading-relaxed text-slate-600">
-              Today, we serve over 1,00,000 customers across 500+ cities, listing 50,000+ products from 2,500+ verified vendors.
+              Today, we serve over 1,00,000 customers across 50+ cities, listing 50,000+ products from verified vendors.
             </p>
           </div>
           <div className="grid grid-cols-2 gap-4">

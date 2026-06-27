@@ -4,57 +4,62 @@
       "id": "1",
       "name": "Havells Wires 2.5mm",
       "slug": "havells-wires-25mm",
+      "sku": "HV-WR-2.5",
       "price": 1100,
+      "wholesalePrice": 950,
       "categoryId": "1",
       "isActive": true,
       "isFeatured": true,
       "description": "High quality wires",
       "stock": 50,
+      "minOrderQty": 5,
+      "brand": "Havells",
       "image": "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcReswhZnNxohw7j1yd14C0qjH4nbS72b4tRH1vi3w6aKKeIqUDc6WmFYFqgQJN_UgtyXqMJs4rWSmJ3GDvL0_ll6z7xqcZ9BwlIhWYDe5y4z1Wq485EZeEVvEKpjfDe&usqp=CAc"
-    },
-    {
-      "id": "2",
-      "name": "Polycab Switch 2A",
-      "slug": "polycab-switch-2a",
-      "price": 150,
-      "categoryId": "2",
-      "isActive": true,
-      "isFeatured": true,
-      "description": "Modular switch",
-      "stock": 100
     },
     {
       "id": "3",
       "name": "Schneider MCB 16A",
       "slug": "schneider-mcb-16a",
+      "sku": "SN-MCB-16A",
       "price": 450,
+      "wholesalePrice": 380,
       "categoryId": "3",
       "isActive": true,
       "isFeatured": true,
       "description": "Circuit breaker",
-      "stock": 75
+      "stock": 75,
+      "minOrderQty": 20,
+      "brand": "Schneider"
     },
     {
       "id": "4",
       "name": "Legrand DB Box",
       "slug": "legrand-db-box",
+      "sku": "LG-DB-12M",
       "price": 850,
+      "wholesalePrice": 720,
       "categoryId": "4",
       "isActive": true,
       "isFeatured": false,
       "description": "Distribution board",
-      "stock": 30
+      "stock": 30,
+      "minOrderQty": 5,
+      "brand": "Legrand"
     },
     {
       "id": "5",
       "name": "Crompton Fan",
       "slug": "crompton-fan",
+      "sku": "CR-CF-1200",
       "price": 2500,
+      "wholesalePrice": 2100,
       "categoryId": "5",
       "isActive": true,
       "isFeatured": true,
       "description": "Ceiling fan",
-      "stock": 25
+      "stock": 25,
+      "minOrderQty": 2,
+      "brand": "Crompton"
     }
   ],
   "categories": [

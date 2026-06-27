@@ -5,7 +5,7 @@ import Button from '@/components/common/Button';
 import { useCartStore, formatPrice } from '@/store';
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, getTotal } = useCartStore();
+  const { items, removeItem, updateQuantity, getTotal, getItemPrice } = useCartStore();
   const subtotal = getTotal();
   const gst = subtotal * 0.18;
   const total = subtotal + gst;
@@ -33,30 +33,45 @@ export default function CartPage() {
 
         <div className="mt-8 grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
-              <div key={item.id} className="card flex gap-4 p-4">
-                <img src={item.image} alt={item.name} className="h-24 w-24 rounded-xl object-cover" />
-                <div className="flex flex-1 flex-col justify-between">
-                  <div>
-                    <h3 className="font-semibold text-slate-800">{item.name}</h3>
-                    <p className="text-sm text-slate-400">
-                      {typeof item.brand === 'object' ? item.brand?.name : item.brand}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center rounded-lg border border-slate-200">
-                      <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1.5"><Minus className="h-3 w-3" /></button>
-                      <span className="w-8 text-center text-sm">{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1.5"><Plus className="h-3 w-3" /></button>
+            {items.map((item) => {
+              const itemPrice = getItemPrice(item);
+              const isWholesale = item.wholesalePrice && item.minOrderQty && item.quantity >= item.minOrderQty;
+              return (
+                <div key={item.id} className="card flex gap-4 p-4">
+                  <img src={item.image} alt={item.name} className="h-24 w-24 rounded-xl object-cover" />
+                  <div className="flex flex-1 flex-col justify-between">
+                    <div>
+                      <h3 className="font-semibold text-slate-800">{item.name}</h3>
+                      <p className="text-sm text-slate-400">
+                        {typeof item.brand === 'object' ? item.brand?.name : item.brand}
+                      </p>
+                      {item.wholesalePrice && item.minOrderQty && (
+                        <p className="text-xs text-slate-400 mt-1">
+                          Wholesale price: {formatPrice(item.wholesalePrice)} (min {item.minOrderQty}+)
+                          {isWholesale && <span className="text-green-600 ml-1 font-medium">✓ Applied</span>}
+                        </p>
+                      )}
                     </div>
-                    <p className="font-bold text-primary-700">{formatPrice(item.price * item.quantity)}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center rounded-lg border border-slate-200">
+                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1.5"><Minus className="h-3 w-3" /></button>
+                        <span className="w-8 text-center text-sm">{item.quantity}</span>
+                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="p-1.5"><Plus className="h-3 w-3" /></button>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-primary-700">{formatPrice(itemPrice * item.quantity)}</p>
+                        {isWholesale && (
+                          <p className="text-xs text-green-600 line-through">{formatPrice(item.price * item.quantity)}</p>
+                        )}
+                      </div>
+                    </div>
                   </div>
+                  <button onClick={() => removeItem(item.id)} className="self-start p-2 text-slate-400 hover:text-red-500">
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
-                <button onClick={() => removeItem(item.id)} className="self-start p-2 text-slate-400 hover:text-red-500">
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="card h-fit p-6">

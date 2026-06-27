@@ -13,12 +13,16 @@ export default function AdminProductsPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
+    sku: '',
     price: '',
+    wholesalePrice: '',
     categoryId: '',
     isActive: true,
     isFeatured: false,
     description: '',
     stock: '',
+    minOrderQty: '',
+    brand: '',
     image: ''
   });
   const queryClient = useQueryClient();
@@ -31,7 +35,7 @@ export default function AdminProductsPage() {
   const products = productsData?.data?.products || productsData?.products || [];
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => adminApi.delete(`/products/${id}`),
+    mutationFn: (id) => adminApi.delete(`/admin/products/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(['admin-products']);
     },
@@ -53,12 +57,16 @@ export default function AdminProductsPage() {
       setFormData({
         name: '',
         slug: '',
+        sku: '',
         price: '',
+        wholesalePrice: '',
         categoryId: '',
         isActive: true,
         isFeatured: false,
         description: '',
         stock: '',
+        minOrderQty: '',
+        brand: '',
         image: ''
       });
     },
@@ -73,12 +81,16 @@ export default function AdminProductsPage() {
       setFormData({
         name: '',
         slug: '',
+        sku: '',
         price: '',
+        wholesalePrice: '',
         categoryId: '',
         isActive: true,
         isFeatured: false,
         description: '',
         stock: '',
+        minOrderQty: '',
+        brand: '',
         image: ''
       });
     },
@@ -99,12 +111,16 @@ export default function AdminProductsPage() {
     setFormData({
       name: product.name,
       slug: product.slug,
+      sku: product.sku || '',
       price: product.price,
+      wholesalePrice: product.wholesalePrice || '',
       categoryId: product.categoryId,
       isActive: product.isActive,
       isFeatured: product.isFeatured,
       description: product.description,
       stock: product.stock,
+      minOrderQty: product.minOrderQty || '',
+      brand: product.brand || '',
       image: product.image || ''
     });
     setShowModal(true);
@@ -115,12 +131,16 @@ export default function AdminProductsPage() {
     setFormData({
       name: '',
       slug: '',
+      sku: '',
       price: '',
+      wholesalePrice: '',
       categoryId: '',
       isActive: true,
       isFeatured: false,
       description: '',
       stock: '',
+      minOrderQty: '',
+      brand: '',
       image: ''
     });
     setShowModal(true);
@@ -132,12 +152,17 @@ export default function AdminProductsPage() {
     setFormData({
       name: '',
       slug: '',
+      sku: '',
       price: '',
+      wholesalePrice: '',
       categoryId: '',
       isActive: true,
       isFeatured: false,
       description: '',
-      stock: ''
+      stock: '',
+      minOrderQty: '',
+      brand: '',
+      image: ''
     });
   };
 
@@ -146,7 +171,9 @@ export default function AdminProductsPage() {
     const productData = {
       ...formData,
       price: parseFloat(formData.price),
+      wholesalePrice: formData.wholesalePrice ? parseFloat(formData.wholesalePrice) : null,
       stock: parseInt(formData.stock),
+      minOrderQty: formData.minOrderQty ? parseInt(formData.minOrderQty) : 1,
       slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
     };
 
@@ -210,6 +237,8 @@ export default function AdminProductsPage() {
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">SKU</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Category</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Price</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Wholesale</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Min Qty</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Stock</th>
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">Status</th>
                   <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-500">Actions</th>
@@ -229,15 +258,27 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{product.sku}</td>
+                    <td className="px-4 py-3 text-sm text-slate-600">{product.sku || '-'}</td>
                     <td className="px-4 py-3 text-sm text-slate-600">{product.category?.name || 'Uncategorized'}</td>
                     <td className="px-4 py-3 text-sm text-slate-600">
-                      <div>
-                        <p className="font-medium">{formatPrice(product.price)}</p>
-                        <p className="text-xs text-slate-500">Wholesale: {formatPrice(product.wholesalePrice)}</p>
-                      </div>
+                      <p className="font-medium">{formatPrice(product.price)}</p>
+                      {product.wholesalePrice && product.wholesalePrice < product.price && (
+                        <p className="text-xs text-green-600">
+                          {Math.round(((product.price - product.wholesalePrice) / product.price) * 100)}% off
+                        </p>
+                      )}
                     </td>
-                    <td className="px-4 py-3 text-sm text-slate-600">{product.inventory?.quantity || 0}</td>
+                    <td className="px-4 py-3 text-sm text-slate-600">
+                      {product.wholesalePrice ? formatPrice(product.wholesalePrice) : '-'}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-600">
+                      {product.minOrderQty || 1}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`text-sm font-medium ${(product.stock || 0) === 0 ? 'text-red-600' : 'text-slate-600'}`}>
+                        {product.stock || 0}
+                      </span>
+                    </td>
                     <td className="px-4 py-3">
                       <button
                         onClick={() => handleToggleActive(product.id)}
@@ -303,6 +344,30 @@ export default function AdminProductsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">SKU</label>
+                    <input
+                      type="text"
+                      name="sku"
+                      value={formData.sku}
+                      onChange={handleInputChange}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="PROD-001"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Brand</label>
+                    <input
+                      type="text"
+                      name="brand"
+                      value={formData.brand}
+                      onChange={handleInputChange}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="Brand name"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-4">
+                  <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">Price (₹)</label>
                     <input
                       type="number"
@@ -317,18 +382,43 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Stock</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Wholesale (₹)</label>
                     <input
                       type="number"
-                      name="stock"
-                      value={formData.stock}
+                      name="wholesalePrice"
+                      value={formData.wholesalePrice}
                       onChange={handleInputChange}
-                      required
                       min="0"
+                      step="0.01"
                       className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-                      placeholder="0"
+                      placeholder="0.00"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">Min Qty</label>
+                    <input
+                      type="number"
+                      name="minOrderQty"
+                      value={formData.minOrderQty}
+                      onChange={handleInputChange}
+                      min="1"
+                      className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                      placeholder="1"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Stock</label>
+                  <input
+                    type="number"
+                    name="stock"
+                    value={formData.stock}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                    className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+                    placeholder="0"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Category</label>

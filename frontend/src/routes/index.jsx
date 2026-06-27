@@ -1,6 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '@/layouts/MainLayout';
-import AuthLayout from '@/layouts/AuthLayout';
 import DashboardLayout from '@/layouts/DashboardLayout';
 import AdminProtectedRoute from '@/components/AdminProtectedRoute';
 
@@ -11,9 +10,6 @@ import ProductDetailsPage from '@/pages/ProductDetails/ProductDetailsPage';
 import CategoriesPage from '@/pages/Categories/CategoriesPage';
 import AboutPage from '@/pages/About/AboutPage';
 import ContactPage from '@/pages/Contact/ContactPage';
-import LoginPage from '@/pages/auth/LoginPage';
-import RegisterPage from '@/pages/auth/RegisterPage';
-import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage';
 import CartPage from '@/pages/Cart/CartPage';
 import CheckoutPage from '@/pages/Checkout/CheckoutPage';
 import OrdersPage from '@/pages/Orders/OrdersPage';
@@ -52,12 +48,6 @@ export default function AppRoutes() {
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="support" element={<SupportPage />} />
         <Route path="*" element={<NotFoundPage />} />
-      </Route>
-
-      <Route element={<AuthLayout />}>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="register" element={<RegisterPage />} />
-        <Route path="forgot-password" element={<ForgotPasswordPage />} />
       </Route>
 
       <Route path="admin/login" element={<AdminLogin />} />

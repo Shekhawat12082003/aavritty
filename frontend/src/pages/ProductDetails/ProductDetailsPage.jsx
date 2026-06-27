@@ -79,8 +79,8 @@ export default function ProductDetailsPage() {
                 <span className="w-10 text-center font-medium">{qty}</span>
                 <button onClick={() => setQty(qty + 1)} className="p-2 hover:bg-surface-50"><Plus className="h-4 w-4" /></button>
               </div>
-              <span className={`badge ${product.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-                {product.inStock ? `In Stock (${product.stock})` : 'Out of Stock'}
+              <span className={`badge ${(product.stock || 0) > 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {(product.stock || 0) > 0 ? `In Stock (${product.stock})` : 'Out of Stock'}
               </span>
             </div>
 

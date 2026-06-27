@@ -81,7 +81,16 @@ export const useCartStore = create(
         });
       },
       clearCart: () => set({ items: [] }),
-      getTotal: () => get().items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+      getItemPrice: (item) => {
+        if (item.wholesalePrice && item.minOrderQty && item.quantity >= item.minOrderQty) {
+          return item.wholesalePrice;
+        }
+        return item.price;
+      },
+      getTotal: () => get().items.reduce((sum, i) => {
+        const price = get().getItemPrice(i);
+        return sum + price * i.quantity;
+      }, 0),
       getCount: () => get().items.reduce((sum, i) => sum + i.quantity, 0),
     }),
     { name: 'aavritty-cart' },

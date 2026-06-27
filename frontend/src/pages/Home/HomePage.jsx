@@ -12,7 +12,7 @@ import { useFeaturedProducts, useCategories } from '@/hooks/useProducts';
 
 const features = [
   { icon: Shield, title: 'Verified Vendors', desc: 'All suppliers are GST verified and quality checked' },
-  { icon: Truck, title: 'Pan-India Delivery', desc: 'Fast shipping to 500+ cities across India' },
+  { icon: Truck, title: 'Pan-India Delivery', desc: 'Fast shipping to 50+ cities across India' },
   { icon: Headphones, title: 'Dedicated Support', desc: '24/7 B2B support for bulk order assistance' },
   { icon: Award, title: 'Best Wholesale Prices', desc: 'Competitive pricing with volume discounts' },
 ];

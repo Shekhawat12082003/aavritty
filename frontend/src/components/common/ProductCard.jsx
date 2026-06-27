@@ -58,15 +58,25 @@ export default function ProductCard({ product, index = 0 }) {
           <div className="mt-3 flex items-end justify-between">
             <div>
               <p className="text-lg font-bold text-primary-700">{formatPrice(product.price)}</p>
-              {product.wholesalePrice && (
+              {product.wholesalePrice && product.minOrderQty && (
                 <p className="text-xs text-slate-400">
-                  Wholesale: {formatPrice(product.wholesalePrice)}
+                  Buy {product.minOrderQty}+ for {formatPrice(product.wholesalePrice)}
+                  {product.wholesalePrice < product.price && (
+                    <span className="text-green-600 ml-1">
+                      ({Math.round(((product.price - product.wholesalePrice) / product.price) * 100)}% off)
+                    </span>
+                  )}
                 </p>
               )}
             </div>
             <button
               onClick={handleAddToCart}
-              className="rounded-xl bg-primary-600 p-2.5 text-white transition hover:bg-primary-700"
+              disabled={(product.stock || 0) === 0}
+              className={`rounded-xl p-2.5 text-white transition ${
+                (product.stock || 0) === 0 
+                  ? 'bg-slate-300 cursor-not-allowed' 
+                  : 'bg-primary-600 hover:bg-primary-700'
+              }`}
             >
               <ShoppingCart className="h-4 w-4" />
             </button>

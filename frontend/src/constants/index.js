@@ -21,7 +21,6 @@ export const NAV_LINKS = [
 
 export const STATS = [
   { label: 'Products Listed', value: '50,000+' },
-  { label: 'Verified Vendors', value: '2,500+' },
-  { label: 'Cities Served', value: '500+' },
+  { label: 'Cities Served', value: '50+' },
   { label: 'Happy Customers', value: '1,00,000+' },
 ];

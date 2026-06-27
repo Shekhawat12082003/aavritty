@@ -1,14 +1,16 @@
 import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Search, SlidersHorizontal } from 'lucide-react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { Search, SlidersHorizontal, X } from 'lucide-react';
 import SEO from '@/components/common/SEO';
 import ProductCard from '@/components/common/ProductCard';
 import { PageLoader } from '@/components/common/Loader';
-import { useProducts } from '@/hooks/useProducts';
+import { useProducts, useCategories } from '@/hooks/useProducts';
 
 export default function ShopPage() {
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
+  const [showCategoryFilter, setShowCategoryFilter] = useState(false);
   const category = searchParams.get('category') || '';
 
   const { data, isLoading } = useProducts({
@@ -17,8 +19,25 @@ export default function ShopPage() {
     limit: 12,
   });
 
+  const { data: categories } = useCategories();
+  const categoriesList = Array.isArray(categories) ? categories : [];
+
   const products = data?.products || [];
   const pagination = data?.pagination;
+
+  const handleCategoryChange = (categoryId) => {
+    if (categoryId === category) {
+      searchParams.delete('category');
+    } else {
+      searchParams.set('category', categoryId);
+    }
+    setSearchParams(searchParams);
+  };
+
+  const clearCategory = () => {
+    searchParams.delete('category');
+    setSearchParams(searchParams);
+  };
 
   return (
     <>
@@ -29,7 +48,14 @@ export default function ShopPage() {
           <div>
             <h1 className="section-title">Shop</h1>
             <p className="mt-1 text-slate-500">
-              {category ? `Showing: ${category}` : 'All electrical products'}
+              {category ? (
+                <>
+                  Showing: <span className="font-medium text-primary-600">{categoriesList.find(c => c.id === category)?.name || category}</span>
+                  <button onClick={clearCategory} className="ml-2 text-xs text-slate-400 hover:text-slate-600 underline">
+                    Clear filter
+                  </button>
+                </>
+              ) : 'All electrical products'}
               {pagination && ` · ${pagination.total} products`}
             </p>
           </div>
@@ -44,9 +70,45 @@ export default function ShopPage() {
                 className="input-field !pl-10"
               />
             </div>
-            <button className="btn-secondary !px-3">
-              <SlidersHorizontal className="h-4 w-4" />
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setShowCategoryFilter(!showCategoryFilter)}
+                className={`btn-secondary !px-3 ${showCategoryFilter ? 'bg-primary-50 border-primary-300 text-primary-700' : ''}`}
+              >
+                <SlidersHorizontal className="h-4 w-4" />
+              </button>
+              {showCategoryFilter && (
+                <div className="absolute right-0 top-full z-10 mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-lg p-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold text-slate-800">Categories</h3>
+                    <button onClick={() => setShowCategoryFilter(false)} className="text-slate-400 hover:text-slate-600">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
+                    <button
+                      onClick={() => handleCategoryChange('')}
+                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition ${
+                        !category ? 'bg-primary-100 text-primary-700 font-medium' : 'hover:bg-slate-50 text-slate-600'
+                      }`}
+                    >
+                      All Categories
+                    </button>
+                    {categoriesList.map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => handleCategoryChange(cat.id)}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition ${
+                          category === cat.id ? 'bg-primary-100 text-primary-700 font-medium' : 'hover:bg-slate-50 text-slate-600'
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

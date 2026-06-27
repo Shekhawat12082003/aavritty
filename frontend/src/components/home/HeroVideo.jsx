@@ -87,7 +87,7 @@ export default function HeroVideo() {
               </Link>
             </div>
             <div className="mt-10 flex flex-wrap gap-8 border-t border-white/10 pt-8">
-              {[['50,000+', 'Products'], ['2,500+', 'Vendors'], ['500+', 'Cities']].map(([val, label]) => (
+              {[['50,000+', 'Products'], ['50+', 'Cities']].map(([val, label]) => (
                 <div key={label}>
                   <p className="font-display text-2xl font-bold text-white">{val}</p>
                   <p className="text-sm text-white/50">{label}</p>

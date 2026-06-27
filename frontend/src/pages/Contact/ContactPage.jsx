@@ -37,9 +37,9 @@ export default function ContactPage() {
         <div className="mt-10 grid gap-10 lg:grid-cols-2">
           <div className="space-y-6">
             {[
-              { icon: Phone, label: 'Phone', value: '+91 98765 43210' },
-              { icon: Mail, label: 'Email', value: 'support@aavritty.com' },
-              { icon: MapPin, label: 'Address', value: 'Mumbai, Maharashtra, India' },
+              { icon: Phone, label: 'Phone', value: '+91 9509679668' },
+              { icon: Mail, label: 'Email', value: 'Virendra.Kothari@Jaincybersolutions.com' },
+              { icon: MapPin, label: 'Address', value: 'Indore, Madhya Pradesh' },
               { icon: Clock, label: 'Hours', value: 'Mon - Sat: 9:00 AM - 7:00 PM' },
             ].map((item) => (
               <div key={item.label} className="flex items-start gap-4">

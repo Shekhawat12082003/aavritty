@@ -104,7 +104,14 @@ app.get('/api/v1/health', (req, res) => {
 
 // Categories endpoints
 app.get('/api/v1/products/categories', (req, res) => {
-  res.json({ success: true, data: data.categories });
+  const categoriesWithCount = data.categories.map(category => {
+    const productCount = data.products.filter(p => p.categoryId === category.id && p.isActive).length;
+    return {
+      ...category,
+      count: productCount
+    };
+  });
+  res.json({ success: true, data: categoriesWithCount });
 });
 
 // Products endpoints
@@ -136,12 +143,28 @@ app.get('/api/v1/products', (req, res) => {
     products = products.filter(p => p.isFeatured);
   }
 
-  res.json({ success: true, data: { products, pagination: { total: products.length } } });
+  // Add category information to each product
+  const productsWithCategory = products.map(product => {
+    const category = data.categories.find(cat => cat.id === product.categoryId);
+    return {
+      ...product,
+      category: category || null
+    };
+  });
+
+  res.json({ success: true, data: { products: productsWithCategory, pagination: { total: productsWithCategory.length } } });
 });
 
 app.get('/api/v1/products/featured', (req, res) => {
   const featured = data.products.filter(p => p.isActive && p.isFeatured);
-  res.json({ success: true, data: featured });
+  const featuredWithCategory = featured.map(product => {
+    const category = data.categories.find(cat => cat.id === product.categoryId);
+    return {
+      ...product,
+      category: category || null
+    };
+  });
+  res.json({ success: true, data: featuredWithCategory });
 });
 
 app.get('/api/v1/products/:slug', (req, res) => {
@@ -154,22 +177,33 @@ app.get('/api/v1/products/:slug', (req, res) => {
 
 // Admin products endpoints
 app.get('/api/v1/admin/products', (req, res) => {
-  res.json({ success: true, data: { products: data.products, pagination: { total: data.products.length } } });
+  const productsWithCategory = data.products.map(product => {
+    const category = data.categories.find(cat => cat.id === product.categoryId);
+    return {
+      ...product,
+      category: category || null
+    };
+  });
+  res.json({ success: true, data: { products: productsWithCategory, pagination: { total: data.products.length } } });
 });
 
 app.post('/api/v1/admin/products', (req, res) => {
-  const { name, slug, price, categoryId, isActive, isFeatured, description, stock, image } = req.body;
+  const { name, slug, sku, price, wholesalePrice, categoryId, isActive, isFeatured, description, stock, minOrderQty, brand, image } = req.body;
   
   const newProduct = {
     id: generateId(),
     name,
     slug: slug || name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+    sku: sku || '',
     price: parseFloat(price),
+    wholesalePrice: wholesalePrice ? parseFloat(wholesalePrice) : null,
     categoryId,
     isActive: isActive !== undefined ? isActive : true,
     isFeatured: isFeatured || false,
     description: description || '',
     stock: parseInt(stock) || 0,
+    minOrderQty: minOrderQty ? parseInt(minOrderQty) : 1,
+    brand: brand || '',
     image: image || ''
   };
   
@@ -184,18 +218,22 @@ app.put('/api/v1/admin/products/:id', (req, res) => {
     return res.status(404).json({ success: false, message: 'Product not found' });
   }
   
-  const { name, slug, price, categoryId, isActive, isFeatured, description, stock, image } = req.body;
+  const { name, slug, sku, price, wholesalePrice, categoryId, isActive, isFeatured, description, stock, minOrderQty, brand, image } = req.body;
   
   data.products[index] = {
     ...data.products[index],
     name: name || data.products[index].name,
     slug: slug || data.products[index].slug,
+    sku: sku !== undefined ? sku : data.products[index].sku,
     price: price !== undefined ? parseFloat(price) : data.products[index].price,
+    wholesalePrice: wholesalePrice !== undefined ? (wholesalePrice ? parseFloat(wholesalePrice) : null) : data.products[index].wholesalePrice,
     categoryId: categoryId || data.products[index].categoryId,
     isActive: isActive !== undefined ? isActive : data.products[index].isActive,
     isFeatured: isFeatured !== undefined ? isFeatured : data.products[index].isFeatured,
     description: description !== undefined ? description : data.products[index].description,
     stock: stock !== undefined ? parseInt(stock) : data.products[index].stock,
+    minOrderQty: minOrderQty !== undefined ? (minOrderQty ? parseInt(minOrderQty) : 1) : data.products[index].minOrderQty,
+    brand: brand !== undefined ? brand : data.products[index].brand,
     image: image !== undefined ? image : data.products[index].image
   };
   

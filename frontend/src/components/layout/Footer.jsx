@@ -43,10 +43,11 @@ export default function Footer() {
 
         <div>
           <h4 className="font-display font-semibold">Contact</h4>
+          <p className="mt-2 text-sm text-white/70">Virendra Kothari</p>
           <ul className="mt-4 space-y-3 text-sm text-white/70">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent-400" /> +91 98765 43210</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent-400" /> support@aavritty.com</li>
-            <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-400" /> Mumbai, Maharashtra, India</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4 text-accent-400" /> +91 9509679668</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-accent-400" /> Virendra.Kothari@Jaincybersolutions.com</li>
+            <li className="flex items-start gap-2"><MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-400" /> Indore, Madhya Pradesh</li>
           </ul>
           <div className="mt-4 flex gap-3">
             {[Facebook, Twitter, Linkedin, Instagram].map((Icon, i) => (

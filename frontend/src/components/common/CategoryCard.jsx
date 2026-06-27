@@ -17,7 +17,7 @@ export default function CategoryCard({ category, index = 0, variant = 'grid' }) 
     ...category,
     image: category.image || CATEGORY_IMAGES[category.slug] || '/images/categories/wires.jpg',
   };
-  const href = `/shop?category=${encodeURIComponent(cat.name)}`;
+  const href = `/shop?category=${encodeURIComponent(cat.id)}`;
 
   if (variant === 'banner') {
     return (
